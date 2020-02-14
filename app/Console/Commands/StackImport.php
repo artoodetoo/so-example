@@ -15,8 +15,9 @@ class StackImport extends Command
      * @var string
      */
     protected $signature = 'stack:import 
-                           {file : XML file to import}
-                           {--table= : Whether data to be imported}';
+                           {file     : XML file to import}
+                           {--table= : Where to import data}
+                           {--clear  : Clear table before the import}';
 
     /**
      * The console command description.
@@ -43,17 +44,39 @@ class StackImport extends Command
     public function handle()
     {
         $filename = $this->argument('file');
+        if (is_null($filename)) {
+            $this->error('Filename required');
+            return 1;
+        }
+
         $tablename = $queueName = $this->option('table') ?? $this->guessTable($filename);
+        $clear = $queueName = $this->option('clear');
 
         $bar = $this->output->createProgressBar();
         $bar->setFormatDefinition('custom', 'Records: %current%');
         $bar->setFormat('custom');
 
+        if ($clear) {
+            DB::table($tablename)->delete();
+        }
+
+        $nowStr = now()->format('Y-m-d H:i:s');
         $n = 0;
         $fh = fopen($filename, 'r');
         while (($line = fgets($fh)) !== false) {
             if ($data = $this->parseRow($line)) {
-                DB::table($tablename)->insert($this->translateData($tablename, $data));
+                $safeData = $this->translateData($tablename, $data);
+
+                if ($tablename == 'users') {
+                    $safeData += [
+                        'email' => $this->uniqueEmail($safeData),
+                        'email_verified_at' => $nowStr,
+                        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                        'remember_token' => Str::random(10),
+                    ];
+                }
+                DB::table($tablename)->insert($safeData);
+
                 if (++$n % 1000 == 0) {
                     $bar->advance($n);
                 }
@@ -80,10 +103,29 @@ class StackImport extends Command
         return $tmp['@attributes'];
     }
 
+    function uniqueEmail($data)
+    {
+        if (!empty($data['name'])) {
+            $email = Str::slug($data['name'], '.');
+        } else {
+            $email = Str::random(8);
+        }
+        if (!empty($data['id'])) {
+            $email .= '.' . $data['id'];
+        }
+        $email .= '@example.com';
+
+        return $email;
+    }
+
     private function translateData($tablename, $data)
     {
         $result = [];
         foreach ($data as $key => $value) {
+            // We use unsigned integer for IDs
+            if (substr($key, -2) === 'Id' && $value === '-1') {
+                $value = 1;
+            }
             switch ($key) {
                 case 'CreationDate':
                 case 'Date':
@@ -120,8 +162,12 @@ class StackImport extends Command
                     $result[rtrim($tablename, 's') . '_count'] = $value;
                     break;
 
-                case 'Name':
-                    $result[rtrim($tablename, 's') . '_name'] = $value;
+                case 'DisplayName':
+                    $result['name'] = $value;
+                    break;
+
+                case 'UserDisplayName':
+                    $result['display_name'] = $value;
                     break;
 
                 case 'Class':
@@ -152,8 +198,16 @@ class StackImport extends Command
                     $result['editor_id'] = $value;
                     break;
 
+                case 'PostHistoryTypeId':
+                    $result['history_type_id'] = $value;
+                    break;
+
                 case 'Tags':
                     $result['tags'] = html_entity_decode($value);
+                    break;
+
+                case 'RevisionGUID':
+                    $result['revision_guid'] = uuid2bin($value);
                     break;
 
                 default:
