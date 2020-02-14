@@ -25,6 +25,18 @@ To use unsigned big integer for primary and foreign keys, I have replaced specia
 For privacy purposes, some fields are not mentioned in the dump. But they obviously required, like email and password. See my notes about `users` above.   
 `Votes` table miss the voting user reference. I created it and leave null, but it looks pretty unreal.  
 `Posts` and `Tags` should be related as many-to-many. The pivot table is missing and the only source is denormalized field `posts`.`tags`.   
+  
+## Usage
+
+Do `git clone` and `composer install`, as usual.  
+Download database dump from Web Archive site or via torrent. (you can find links in  Brent's article)  
+Run `php artisan migrate` to create tables.  
+Import tables content one by one:
+
+```bash
+php artisan stack:import path/to/Table.xml
+```
+
 
 ## License
 

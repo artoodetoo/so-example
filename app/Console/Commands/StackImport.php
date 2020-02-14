@@ -162,7 +162,7 @@ class StackImport extends Command
                     break;
 
                 case 'Name':
-                    $result[rtrim($tablename, 's') . '_count'] = $value;
+                    $result[rtrim($tablename, 's') . '_name'] = $value;
                     break;
 
                 case 'DisplayName':
