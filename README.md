@@ -17,13 +17,13 @@ It will be a set of migrations, classes and console command to import DB dump.
 Now all names are in snake_case.  
 It is common to use `created_at` and `updated_at` names for timestamps, so I replaced original field names to these ones when applicable.  
 As for `users` table, I make it compatible with standard Laravel auth, so I added some fields.  
-I shorted a couple of super long names like `PostHistoryTypeId` => `history_type_id`.
+I shorted a couple of super long names like `PostHistoryTypeId` => `history_type_id`.  
 To use unsigned big integer for primary and foreign keys, I have replaced special value of "-1" to "1".       
 
 ## Missing data
 
-For privacy purposes, some fields are not mentioned in the dump. But they obviously required, like email and password. See notes above.   
-Votes table miss the voting user reference. I created it and leave null, but it looks pretty unreal.  
+For privacy purposes, some fields are not mentioned in the dump. But they obviously required, like email and password. See my notes about `users` above.   
+`Votes` table miss the voting user reference. I created it and leave null, but it looks pretty unreal.  
 `Posts` and `Tags` should be related as many-to-many. The pivot table is missing and the only source is denormalized field `posts`.`tags`.   
 
 ## License

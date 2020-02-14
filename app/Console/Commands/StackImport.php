@@ -26,6 +26,9 @@ class StackImport extends Command
      */
     protected $description = 'Import XML data file to table';
 
+    /** @var string */
+    protected $nowStr;
+
     /**
      * Create a new command instance.
      *
@@ -43,6 +46,8 @@ class StackImport extends Command
      */
     public function handle()
     {
+        $this->nowStr = now()->format('Y-m-d H:i:s');
+
         $filename = $this->argument('file');
         if (is_null($filename)) {
             $this->error('Filename required');
@@ -60,21 +65,12 @@ class StackImport extends Command
             DB::table($tablename)->delete();
         }
 
-        $nowStr = now()->format('Y-m-d H:i:s');
         $n = 0;
         $fh = fopen($filename, 'r');
         while (($line = fgets($fh)) !== false) {
             if ($data = $this->parseRow($line)) {
-                $safeData = $this->translateData($tablename, $data);
 
-                if ($tablename == 'users') {
-                    $safeData += [
-                        'email' => $this->uniqueEmail($safeData),
-                        'email_verified_at' => $nowStr,
-                        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-                        'remember_token' => Str::random(10),
-                    ];
-                }
+                $safeData = $this->translateData($tablename, $data);
                 DB::table($tablename)->insert($safeData);
 
                 if (++$n % 1000 == 0) {
@@ -132,13 +128,16 @@ class StackImport extends Command
                     $result['created_at'] = Carbon::make($value)->format('Y-m-d H:i:s');
                     break;
 
-                case 'LastAccessDate':
                 case 'LastEditDate':
                     $result['updated_at'] = Carbon::make($value)->format('Y-m-d H:i:s');
                     break;
 
                 case 'LastActivityDate':
                     $result['activity_at'] = Carbon::make($value)->format('Y-m-d H:i:s');
+                    break;
+
+                case 'LastAccessDate':
+                    $result['last_accessed_at'] = Carbon::make($value)->format('Y-m-d H:i:s');
                     break;
 
                 case 'ClosedDate':
@@ -159,6 +158,10 @@ class StackImport extends Command
                     break;
 
                 case 'Count':
+                    $result[rtrim($tablename, 's') . '_count'] = $value;
+                    break;
+
+                case 'Name':
                     $result[rtrim($tablename, 's') . '_count'] = $value;
                     break;
 
@@ -214,6 +217,20 @@ class StackImport extends Command
                     $result[Str::snake($key)] = $value;
             }
         }
+
+        if ($tablename == 'users') {
+            $result += [
+                'email' => $this->uniqueEmail($result),
+                'email_verified_at' => $this->nowStr,
+                'password' => Str::random(10), // unreal hash
+                'remember_token' => Str::random(10),
+            ];
+        }
+
+        if (isset($result['created_at']) && !isset($result['updated_at'])) {
+            $result['updated_at'] = $result['created_at'];
+        }
+
         return $result;
     }
 }
