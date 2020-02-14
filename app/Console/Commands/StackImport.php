@@ -73,8 +73,9 @@ class StackImport extends Command
                 $safeData = $this->translateData($tablename, $data);
                 DB::table($tablename)->insert($safeData);
 
-                if (++$n % 1000 == 0) {
-                    $bar->advance($n);
+                if (++$n == 1000) {
+                    $bar->advance($n); // it's step, not the total value
+                    $n = 0;
                 }
             }
         }
@@ -170,7 +171,7 @@ class StackImport extends Command
                     break;
 
                 case 'UserDisplayName':
-                    $result['display_name'] = $value;
+                    $result['user_name'] = $value;
                     break;
 
                 case 'Class':

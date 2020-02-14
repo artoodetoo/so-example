@@ -51,6 +51,8 @@ class CreatePostHistoryTable extends Migration
                 '52 = Question became hot network question; ' .
                 '53 = Question removed from hot network questions by a moderator');
             $table->unsignedBigInteger('post_id');
+            $table->char('revision_guid', 16)->collation('binary')->comment('At times more than one type of history record can be recorded by a single action. ' .
+                'All of these will be grouped using the same RevisionGUID');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('user_name', 191)->nullable()->comment('populated if a user has been removed and no longer referenced by user Id');
             $table->string('comment', 191)->nullable()->comment('the comment made by the user who edited a post. ' .
