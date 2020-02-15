@@ -1,9 +1,10 @@
 {
-    "name": "laravel/laravel",
+    "name": "artoodetoo/so-example",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "StackOverflow DB for Laravel",
     "keywords": [
-        "framework",
+        "project",
+        "stackoverflow",
         "laravel"
     ],
     "license": "MIT",

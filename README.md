@@ -40,4 +40,4 @@ php artisan stack:import path/to/Table.xml
 
 ## License
 
-This project is free and distributed under MIT license
+StackOverflow DB for Laravel is open-sourced software licensed under the [MIT license](LICENSE.md).

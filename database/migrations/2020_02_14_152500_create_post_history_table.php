@@ -55,7 +55,7 @@ class CreatePostHistoryTable extends Migration
                 'All of these will be grouped using the same RevisionGUID');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('user_name', 191)->nullable()->comment('populated if a user has been removed and no longer referenced by user Id');
-            $table->string('comment', 191)->nullable()->comment('the comment made by the user who edited a post. ' .
+            $table->string('comment', 512)->nullable()->comment('the comment made by the user who edited a post. ' .
                 'If history_type_id = 10, this field contains the close_reason_id');
             $table->mediumText('body')->nullable()->comment(
                 'A raw version of the new value for a given revision ' .
