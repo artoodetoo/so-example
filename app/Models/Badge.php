@@ -12,4 +12,12 @@ class Badge extends Model
         'badge_class',
         'tag_based',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

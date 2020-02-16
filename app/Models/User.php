@@ -50,4 +50,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function badges()
+    {
+        return $this->hasMany(Badge::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function questions()
+    {
+        return $this->hasMany(Post::class, 'owner_id')->where('post_type_id', 1);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function answers()
+    {
+        return $this->hasMany(Post::class, 'owner_id')->where('post_type_id', 2);
+    }
 }
