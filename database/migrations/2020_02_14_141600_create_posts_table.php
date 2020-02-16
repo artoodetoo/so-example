@@ -17,7 +17,7 @@ class CreatePostsTable extends Migration
             $table->bigIncrements('id');
             $table->string('title', 191)->nullable();
             $table->mediumText('body')->nullable()->comment('as rendered HTML, not Markdown');
-            $table->string('tags', 512)->nullable();
+            $table->string('tag_list', 512)->nullable();
             $table->unsignedBigInteger('parent_id')->nullable()->comment('only present if post_type_id = 2');
             $table->unsignedBigInteger('owner_id')->nullable()->comment('');
             $table->string('owner_name', 191)->nullable()->comment('only present if user has not been deleted; ' .

@@ -190,6 +190,10 @@ class StackImport extends Command
                     $result['tag_based'] = ($value == 'True' ? 1 : 0);
                     break;
 
+                case 'Tags':
+                    $result['tag_list'] = $value;
+                    break;
+
                 case 'AcceptedAnswerId':
                     $result['accepted_id'] = $value;
                     break;

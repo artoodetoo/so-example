@@ -1,3 +1,6 @@
+[![Latest Stable Version](https://poser.pugx.org/artoodetoo/so-example/v/stable)](https://packagist.org/packages/artoodetoo/so-example)
+[![License](https://poser.pugx.org/artoodetoo/so-example/license)](https://packagist.org/packages/artoodetoo/so-example)
+
 # StackOverflow DB for Laravel
 
 To be precise, it is the common structure of a several Q-n-A sites of StackExchange, not only stackeoverflow.com.  

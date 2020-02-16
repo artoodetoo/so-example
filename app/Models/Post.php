@@ -9,7 +9,7 @@ class Post extends Model
     protected $fillable = [
         'title',
         'body',
-        'tags',
+        'tag_list',
         'parent_id',
         'owner_id',
         'owner_name',
