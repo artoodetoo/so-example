@@ -39,7 +39,12 @@ Import tables content one by one:
 ```bash
 php artisan stack:import path/to/Table.xml
 ```
+Typically, for each site you have 4 XML files to import: Users, Badges, Tags, Posts, Comments, Votes, PostLinks, PostHistory.  
+5th table post_tag has no source file. To recreate its data you have to run
 
+```bash
+php artisan stack:post-tag
+```
 
 ## License
 
