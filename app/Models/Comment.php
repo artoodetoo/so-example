@@ -11,7 +11,7 @@ class Comment extends Model
         'score',
         'body',
         'user_id',
-        'display_name',
+        'user_name',
     ];
 
     /**

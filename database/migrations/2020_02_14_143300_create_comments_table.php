@@ -19,7 +19,7 @@ class CreateCommentsTable extends Migration
             $table->integer('score')->default(0);
             $table->mediumText('body')->nullable()->comment('Comment body');
             $table->unsignedBigInteger('user_id')->nullable()->comment('Optional. Absent if user has been deleted');
-            $table->string('display_name', 191)->nullable();
+            $table->string('user_name', 191)->nullable();
             $table->timestamps();
         });
     }
