@@ -53,7 +53,7 @@ class User extends Authenticatable
 
     public function badges()
     {
-        return $this->hasMany(Badge::class);
+        return $this->hasMany(Badge::class)->orderBy('created_at', 'desc');
     }
 
     /**
@@ -61,7 +61,7 @@ class User extends Authenticatable
      */
     public function questions()
     {
-        return $this->hasMany(Post::class, 'owner_id')->where('post_type_id', 1);
+        return $this->hasMany(Post::class, 'owner_id')->where('post_type_id', 1)->orderBy('created_at', 'desc');
     }
 
     /**
@@ -69,6 +69,6 @@ class User extends Authenticatable
      */
     public function answers()
     {
-        return $this->hasMany(Post::class, 'owner_id')->where('post_type_id', 2);
+        return $this->hasMany(Post::class, 'owner_id')->where('post_type_id', 2)->orderBy('created_at', 'desc');
     }
 }
