@@ -35,7 +35,7 @@ To use unsigned big integer for primary and foreign keys, I have replaced specia
 ## Missing data
 
 For privacy purposes, some fields are not mentioned in the dump. But they obviously required, like email and password. See my notes about `users` above.   
-`Votes` table miss the voting user reference. I created it and leave null, but it looks pretty unreal.  
+`Votes` table miss the voting user reference. It is null in most cases (exceptions are bounties and favs), it looks pretty unreal and have to be filled by fake data.  
 `Posts` and `Tags` should be related as many-to-many. The pivot table is missing and the only source is denormalized field `posts`.`tags`.   
   
 ## Usage
@@ -45,7 +45,7 @@ For privacy purposes, some fields are not mentioned in the dump. But they obviou
 ```bash
 composer create-project artoodetoo/so-structure
 ```  
-Then go to new project durectory, set database parameters in the .env file and run 
+Then go to new project directory, set database parameters in the .env file and run 
 
 ```bash
 php artisan migrate
